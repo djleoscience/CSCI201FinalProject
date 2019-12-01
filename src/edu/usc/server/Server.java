@@ -36,19 +36,19 @@ public class Server {
 			Socket s;
 			try {
 				s = serverSocket.accept();
+				ClientHandlerThread thread = new ClientHandlerThread(s);
+				if(threads.size() >= maxPlayers){
+					thread.sendPoolIsFullResponse();
+				}
+				else{
+					threads.add(thread);
+					thread.start();
+				}
 			} catch (IOException e) {
 				System.out.println("Error in connecting with client:");
 				e.printStackTrace();
 			}
-			//TODO: figure out what to put in constructor
-			ClientHandlerThread thread = new ClientHandlerThread();
-			if(threads.size() >= maxPlayers){
-				thread.sendPoolIsFullResponse();
-			}
-			else{
-				threads.add(thread);
-				thread.start();
-			}
+			
 		}
 	}
 	
